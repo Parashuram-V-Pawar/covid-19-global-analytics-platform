@@ -2,8 +2,4 @@
 venv/
 .env/
 
-# Input files
-data/
-*.csv
-
 .DS_Store
