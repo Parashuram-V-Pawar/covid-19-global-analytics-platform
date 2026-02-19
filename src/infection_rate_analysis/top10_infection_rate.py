@@ -8,7 +8,7 @@ from pyspark.sql.functions import *
 # 2 Start Spark Session
 # ---------------------------------------------------------
 spark = SparkSession.builder \
-    .appName("Confirmed Cases Per 1000") \
+    .appName("Top 10 Infection Rate") \
     .master("yarn") \
     .getOrCreate()
 
@@ -22,7 +22,7 @@ worldometer_data = spark.read.parquet(
 )
 
 # ---------------------------------------------------------
-# 4 Calculate Confirmed Cases Per 1000
+# 4 Calculate Confirmed Per 1000
 # ---------------------------------------------------------
 cases_per_population = worldometer_data.select(
     "Country/Region", "Population", "TotalCases"
@@ -32,13 +32,22 @@ cases_per_population = worldometer_data.select(
 )
 
 # ---------------------------------------------------------
-# 5 Show Output
+# 5 Get Top 10 Countries
 # ---------------------------------------------------------
-cases_per_population.show()
+top10_contries_infection_rate = cases_per_population.orderBy(
+    col("Confirmed Per 1000").desc()
+).limit(10)
 
 # ---------------------------------------------------------
-# 6 Write Output to Analytics Layer
+# 6 Show Output
 # ---------------------------------------------------------
-cases_per_population.write \
+top10_contries_infection_rate.show()
+
+# ---------------------------------------------------------
+# 7 Write Output to Analytics Layer
+# ---------------------------------------------------------
+top10_contries_infection_rate.write \
     .mode("overwrite") \
-    .parquet("hdfs:///data/covid/analytics/cases_per_population")
+    .parquet("hdfs:///data/covid/analytics/top10_contries_infection_rate")
+
+spark.stop()
