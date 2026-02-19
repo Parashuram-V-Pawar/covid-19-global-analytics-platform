@@ -1,10 +1,14 @@
+#---------------------------------------------------------------------------
 # Import Statements
+#---------------------------------------------------------------------------
 import subprocess
 import time
 from pyspark.sql import SparkSession
 from pyspark.sql.types import *
 
+#---------------------------------------------------------------------------
 # Starting Session
+#---------------------------------------------------------------------------
 spark = SparkSession.builder.appName("Data Ingestion").getOrCreate()
 
 RAW_PATH = "hdfs:///data/covid/raw/"
@@ -12,6 +16,7 @@ STAGING_PATH = "hdfs:///data/covid/staging/"
 
 #---------------------------------------------------------------------------
 # schema for covid_19_clean_complete table
+#---------------------------------------------------------------------------
 covid_clean_schema = StructType([
     StructField("Province/State", StringType(), True),
     StructField("Country/Region", StringType(), True),
@@ -43,6 +48,7 @@ covid_clean.write.mode("overwrite").parquet(STAGING_PATH + "covid_clean")
 
 #---------------------------------------------------------------------------
 # Schema for full_grouped table
+#---------------------------------------------------------------------------
 full_grouped_schema = StructType([
     StructField("Date", DateType(), True),
     StructField("Country/Region", StringType(), True),
@@ -74,6 +80,7 @@ full_grouped.write.mode("overwrite").parquet(STAGING_PATH + "full_grouped")
 
 #---------------------------------------------------------------------------
 # Schema for country_wise_latest table
+#---------------------------------------------------------------------------
 country_wise_latest_schema = StructType([
     StructField("Country/Region", StringType(), True),
     StructField("Confirmed", LongType(), True),
@@ -106,6 +113,7 @@ country_wise_latest.write.mode("overwrite").parquet(STAGING_PATH + "country_wise
 
 #---------------------------------------------------------------------------
 # Schema for day_wise table
+#---------------------------------------------------------------------------
 day_wise_schema = StructType([
     StructField("Date", DateType(), True),
     StructField("Confirmed", LongType(), True),
@@ -138,6 +146,7 @@ day_wise.write.mode("overwrite").parquet(STAGING_PATH + "day_wise")
 
 #---------------------------------------------------------------------------
 # Schema for usa_country_wise table
+#---------------------------------------------------------------------------
 usa_county_wise_schema = StructType([
     StructField("UID", LongType(), True),
     StructField("iso2", StringType(), True),
@@ -167,6 +176,7 @@ usa_country_wise.write.mode("overwrite").parquet(STAGING_PATH + "usa_country_wis
 
 #---------------------------------------------------------------------------
 # Schema for worldometer_data table
+#---------------------------------------------------------------------------
 worldometer_data_schema = StructType([
     StructField("Country/Region", StringType(), True),
     StructField("Continent", StringType(), True),
@@ -199,7 +209,6 @@ worldometer_data.write.mode("overwrite").parquet(STAGING_PATH + "worldometer_dat
 # -------------------------------------------------------------------------
 # Compare File Size in Hadoop and Parquet
 # -------------------------------------------------------------------------
-## Comparing 
 print("File size in Hadoop...")
 subprocess.run(["hdfs", "dfs", "-du", "-h", "/data/covid/raw"])
 print("\nFile size in parquet...")
@@ -267,5 +276,8 @@ print(f'''
 Parquet read time {end_time - start_time} seconds
 ''')
 
+#---------------------------------------------------------------------------
+# Listing all staged parquet files.
+#---------------------------------------------------------------------------
 print("Listing stored 'Parquet' files...........................")
 subprocess.run(["hdfs", "dfs", "-ls", "/data/covid/staging/"])
