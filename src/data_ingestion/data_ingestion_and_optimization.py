@@ -10,7 +10,11 @@ from pyspark.sql.types import *
 # Starting Session
 #---------------------------------------------------------------------------
 spark = SparkSession.builder.appName("Data Ingestion").getOrCreate()
+spark.sparkContext.setLogLevel("ERROR")
 
+# ---------------------------------------------------------
+# 2 Define HDFS Paths (RAW & STAGING Layers)
+# ---------------------------------------------------------
 RAW_PATH = "hdfs:///data/covid/raw/"
 STAGING_PATH = "hdfs:///data/covid/staging/"
 
