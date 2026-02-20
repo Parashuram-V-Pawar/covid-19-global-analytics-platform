@@ -9,7 +9,6 @@ from pyspark.sql.functions import *
 # ---------------------------------------------------------
 spark = SparkSession.builder \
     .appName("Top 10 Infection Rate") \
-    .master("yarn") \
     .getOrCreate()
 
 spark.sparkContext.setLogLevel("ERROR")
