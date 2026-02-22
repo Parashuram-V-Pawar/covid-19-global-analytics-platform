@@ -149,8 +149,9 @@ day_wise = day_wise.na.fill({
 day_wise.write.mode("overwrite").parquet(STAGING_PATH + "day_wise")
 
 #---------------------------------------------------------------------------
-# Schema for usa_country_wise table
+# Schema for usa_county_wise table
 #---------------------------------------------------------------------------
+#### Schema for usa_country_wise table
 usa_county_wise_schema = StructType([
     StructField("UID", LongType(), True),
     StructField("iso2", StringType(), True),
@@ -161,22 +162,32 @@ usa_county_wise_schema = StructType([
     StructField("Province_State", StringType(), True),
     StructField("Country_Region", StringType(), True),
     StructField("Lat", DoubleType(), True),
-    StructField("Long_", DoubleType(), True)
+    StructField("Long_", DoubleType(), True),
+    StructField("Combined_Key",StringType(), True),
+    StructField("Date",DateType(), True),
+    StructField("Confirmed", LongType(), True),
+    StructField("Deaths", LongType(), True)
 ])
-# Loading data using defined schema.
-usa_country_wise = spark.read.option("header",True).schema(usa_county_wise_schema).csv(RAW_PATH + "usa_county_wise.csv")
-# Handling null values.
-usa_country_wise = usa_country_wise.na.drop(subset=["UID", "Province_State"])
-usa_country_wise = usa_country_wise.na.fill({
+
+#### Loading data using defined schema.
+usa_county_wise = spark.read.option("header",True).schema(usa_county_wise_schema).csv("hdfs:///data/covid/raw/usa_county_wise.csv")
+
+#### Handling null values.
+usa_county_wise = usa_county_wise.drop("Combined_Key","Date")
+usa_county_wise = usa_county_wise.na.drop(subset=["UID", "Province_State"])
+usa_county_wise = usa_county_wise.na.fill({
     "iso2": "Unknown",
     "iso3": "Unknown",
     "Admin2": "Unknown",
     "Country_Region": "Unknown",
     "Lat": 0.0,
-    "Long_": 0.0
+    "Long_": 0.0,
+    "Confirmed": 0,
+    "Deaths": 0
 })
-# Converting raw data into paraquet format.
-usa_country_wise.write.mode("overwrite").parquet(STAGING_PATH + "usa_country_wise")
+
+#### Converting raw data into paraquet format.
+usa_county_wise.write.mode("overwrite").parquet("hdfs:///data/covid/staging/usa_county_wise")
 
 #---------------------------------------------------------------------------
 # Schema for worldometer_data table
@@ -272,7 +283,7 @@ df_country_wise_latest = spark.read.parquet(STAGING_PATH + "country_wise_latest"
 df_covid_19_clean_complete = spark.read.parquet(STAGING_PATH + "covid_clean").count()
 df_day_wise = spark.read.parquet(STAGING_PATH + "day_wise").count()
 df_full_grouped = spark.read.parquet(STAGING_PATH + "full_grouped").count()
-df_usa_county_wise = spark.read.parquet(STAGING_PATH + "usa_country_wise").count()
+df_usa_county_wise = spark.read.parquet(STAGING_PATH + "usa_county_wise").count()
 df_worldometer_data = spark.read.parquet(STAGING_PATH + "worldometer_data").count()
 end_time = time.time()
 print(f'''
