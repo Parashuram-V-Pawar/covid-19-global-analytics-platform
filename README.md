@@ -98,6 +98,14 @@ COVID-19-GLOBAL-ANALYTICS-PLATFORM/
 |   |-- execution_plan_analysis.py
 |   |-- resource_and_memory_planning.txt
 |
+|-- documentation/
+|   |-- hdfs_command_documentation.txt
+|   |-- resource_and_memory_planning.txt
+|
+|-- screenshots/
+|   |-- execution_plan_aggregation_query.png
+|   |-- execution_plan_join_query.png
+|   |-- execution_plan_window_function_querty.png
 |
 |-- README.md
 |-- requirements.txt
