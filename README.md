@@ -6,7 +6,6 @@ This project simulates a real-world Data Engineering use case for analyzing glob
 ---
 ## Project Objective
 Design, implement, optimize, and analyze a distributed COVID analytics platform where:
-```
 - All data is stored in HDFS
 - All Spark jobs run on YARN
 - Data is processed using:
@@ -14,7 +13,7 @@ Design, implement, optimize, and analyze a distributed COVID analytics platform 
   - Spark SQL
   - RDD API
 - Performance tuning and execution plan analysis are implemented
-```
+
 ---
 ## Tech Stack Used
 ```
@@ -45,14 +44,13 @@ Note: All Spark jobs strictly read from and write to HDFS.
 Kaggle Dataset: https://www.kaggle.com/datasets/imdevskp/corona-virus-report/
 
 ### Tables Processed:
-```
 - full_grouped.csv
 - covid_19_clean_complete.csv
 - country_wise_latest.csv
 - day_wise.csv
 - usa_county_wise.csv
 - worldometer_data.csv
-```
+
 ---
 ## Implemented Tasks
 - Task 1 – Hadoop Integration
