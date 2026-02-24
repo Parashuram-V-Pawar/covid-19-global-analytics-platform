@@ -36,7 +36,7 @@ Tools: VSCode, Jupyter Notebook, Git
 /data/covid/curated
 /data/covid/analytics
 ```
-
+All the outputs are written into /data/covid/analytics
 Note: All Spark jobs strictly read from and write to HDFS.
 
 ---
